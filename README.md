@@ -1,2 +1,7 @@
-# JavaAppJPA
-uma coisa que vim fazendo pra testar umas coisas com persistência de dados.
+# Testes em JPA com Hibernate 🤖
+Este é um teste de aplicação simples onde vou fazendo coisinhas com <br>
+um banco de dados mysql.
+
+# Sinta-se livre 🤙 
+Navegue pelo código, leia e se puder dê sugestões.
+
