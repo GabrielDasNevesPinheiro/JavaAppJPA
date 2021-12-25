@@ -4,6 +4,9 @@
 # Log file
 *.log
 
+# persistence.xml
+*.xml
+
 # BlueJ files
 *.ctxt
 

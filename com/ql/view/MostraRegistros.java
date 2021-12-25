@@ -12,7 +12,6 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-
 public class MostraRegistros extends JInternalFrame {
 
     private JButton addRows;
@@ -23,12 +22,13 @@ public class MostraRegistros extends JInternalFrame {
     private JLabel title;
 
     public static boolean isOpen = false;
-    private Funcionario f = new Funcionario();
+    private final Funcionario f;
     FuncionarioController fc = new FuncionarioController();
     SetorController sc = new SetorController();
 
     public MostraRegistros() {
-        initComponents();
+        this.f = new Funcionario();
+        this.initComponents();
     }
 
     public MostraRegistros(int width, int height) {
@@ -37,21 +37,16 @@ public class MostraRegistros extends JInternalFrame {
                 true, //closable
                 true, //maximizable
                 true);//iconifiable  
-        initComponents();
-        this.setBounds((width - this.getSize().width) / 2, (height - this.getSize().height) / 2, 1280, 500);
-        initComponents();
 
-        this.addInternalFrameListener(new InternalFrameAdapter() {
-            @Override
-            public void internalFrameClosing(InternalFrameEvent e) {
-                isOpen = false;
-            }
-        });
-
+        this.f = new Funcionario();
+        
+        this.initComponents();
+        setBounds((width - this.getSize().width) / 2, (height - this.getSize().height) / 2, 1000, 500);
         this.updateTableView();
     }
 
     private void initComponents() {
+
         jScrollPane1 = new JScrollPane();
         tabela = new JTable();
         title = new JLabel();
@@ -59,14 +54,13 @@ public class MostraRegistros extends JInternalFrame {
         addRows = new JButton();
         btRefresh = new JButton();
 
+        
+
+        addRows.setText("+");
+        btRefresh.setText("Refresh");
+
         this.setTitle("Dados do Banco");
         this.tabela.setAutoCreateRowSorter(true);
-
-        addWindowListener(new WindowAdapter() {
-            public void windowOpened(WindowEvent evt) {
-                formWindowOpened(evt);
-            }
-        });
 
         tabela.setModel(new DefaultTableModel(
                 new Object[][]{
@@ -104,7 +98,7 @@ public class MostraRegistros extends JInternalFrame {
         pack();
     }
 
-    private void resetFuncionario() {
+    private void resetFuncionario() { // reseta os dados do funcionario(objeto que usamos para setar o funcionario selecionado)
         this.f.setCpf("");
         this.f.setId(null);
         this.f.setNome("");
@@ -112,29 +106,30 @@ public class MostraRegistros extends JInternalFrame {
     }
 
     private void updateTableView() {
-        List<Funcionario> lista = fc.listar();
+        List<Funcionario> lista = fc.listar(); // listando todos os funcionarios
 
-        String[][] data = new String[lista.size()][5];
+        String[][] data = new String[lista.size()][5]; // setando um array bidirecional de acordo com os dados de funcionario
 
         for (int i = 0; i < data.length; i++) {
-            String setor = null;
+            String setor;
             try {
-                setor = lista.get(i).getSetor().getNome();
+                setor = lista.get(i).getSetor().getNome(); // pega os setores da tabela
 
             } catch (NullPointerException e) {
-                setor = "???";
+                setor = "???"; // caso não haja setor, essa string será mostrada
             }
+            //setando os dados na array de acordo com seus índices(em ordem, por conta da tabela)
             data[i] = new String[]{String.valueOf(lista.get(i).getId()),
                 lista.get(i).getNome(), String.valueOf(lista.get(i).getIdade()), lista.get(i).getCpf(), setor};
         }
 
-        tabela.setModel(new DefaultTableModel(
+        tabela.setModel(new DefaultTableModel( // ordem da tabela
                 data,
                 new String[]{
                     "id", "nome", "idade", "cpf", "setor"
                 }
         ) {
-            boolean[] canEdit = new boolean[]{
+            boolean[] canEdit = new boolean[]{ // dados que podem ser editados na tabela(em ordem)
                 false, true, true, true, true
             };
 
@@ -143,7 +138,7 @@ public class MostraRegistros extends JInternalFrame {
                 return canEdit[columnIndex];
             }
         });
-        tabela.getSelectedColumn();
+        tabela.getSelectedColumn(); // sempre adiciona esse evento quando o modelo da tabela é atualizado
         tabela.getModel().addTableModelListener((TableModelEvent e) -> {
             TableModel model = tabela.getModel();
             this.f.setId(Integer.parseInt(model.getValueAt(e.getLastRow(), 0).toString()));
@@ -201,6 +196,28 @@ public class MostraRegistros extends JInternalFrame {
 
     }
 
+    private void initListeners() {
+
+        this.addInternalFrameListener(new InternalFrameAdapter() {
+            @Override
+            public void internalFrameClosing(InternalFrameEvent e) {
+                isOpen = false;
+            }
+        });
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowOpened(WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
+
+        deleteButton.addActionListener(this::deleteButtonActionPerformed);
+
+        addRows.addActionListener(this::addRowsActionPerformed);
+
+        btRefresh.addActionListener(this::btRefreshActionPerformed);
+    }
+
     private void initLayout(GroupLayout layout) {
         layout.setHorizontalGroup(
                 layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -234,27 +251,9 @@ public class MostraRegistros extends JInternalFrame {
                                 .addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 364, GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        
                                         .addComponent(deleteButton, GroupLayout.PREFERRED_SIZE, 39, GroupLayout.PREFERRED_SIZE))
                                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-    }
-
-    private void initListeners() {
-        
-        deleteButton.addActionListener((ActionEvent evt) -> {
-            deleteButtonActionPerformed(evt);
-        });
-
-        addRows.setText("+");
-        addRows.addActionListener((ActionEvent evt) -> {
-            addRowsActionPerformed(evt);
-        });
-
-        btRefresh.setText("Refresh");
-        btRefresh.addActionListener((ActionEvent evt) -> {
-            btRefreshActionPerformed(evt);
-        });
     }
 
 }

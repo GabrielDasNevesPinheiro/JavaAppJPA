@@ -6,13 +6,13 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class Desktop extends JFrame {
-    
+
     private JMenuItem cadastroMenu;
     private JDesktopPane desktop;
     private JMenuItem registrosMenu;
     private JMenuBar menu;
     private JMenu menuFile;
-    
+
     //starts before the window appears
     static {
         new ConnectionFactory().getConnection();
@@ -31,13 +31,11 @@ public class Desktop extends JFrame {
         this.menuFile = new JMenu();
         this.registrosMenu = new JMenuItem();
         this.cadastroMenu = new JMenuItem();
-        
+
         this.setExtendedState(Frame.MAXIMIZED_BOTH);
 
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setBounds(new Rectangle(600, 600, 1280, 600));
-
-        
 
         this.menuFile.setText("Ações");
         this.cadastroMenu.setText("Cadastrar");
@@ -48,11 +46,7 @@ public class Desktop extends JFrame {
         this.menu.add(menuFile);
         this.setJMenuBar(menu);
 
-        
         this.initListeners();
-
-
-
 
         GroupLayout layout = new GroupLayout(getContentPane());
         GroupLayout desktopLayout = new GroupLayout(desktop);
@@ -110,9 +104,8 @@ public class Desktop extends JFrame {
         }.start();
     }
 
-    
     public static void main(String args[]) {
-        
+
         try {
             for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -120,24 +113,24 @@ public class Desktop extends JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException | 
-                IllegalAccessException | 
-                InstantiationException | 
-                UnsupportedLookAndFeelException e) {
+        } catch (ClassNotFoundException
+                | IllegalAccessException
+                | InstantiationException
+                | UnsupportedLookAndFeelException e) {
             System.out.println("Falha ao setar look and feel");
         }
-        
+
         EventQueue.invokeLater(() -> {
             new Desktop().setVisible(true);
         });
     }
 
     private void initListeners() {
-        
+
         cadastroMenu.addActionListener(this::cadastroMenuActionPerformed);
 
         registrosMenu.addActionListener(this::registrosMenuActionPerformed);
-        
+
     }
 
     private void initLayout(GroupLayout layout, GroupLayout desktopLayout) {
@@ -159,5 +152,5 @@ public class Desktop extends JFrame {
                         .addGap(0, 555, Short.MAX_VALUE)
         );
     }
-    
+
 }
