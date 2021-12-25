@@ -20,53 +20,46 @@ public class Desktop extends JFrame {
 
     //construct
     public Desktop() {
-        initComponents();
-        this.setExtendedState(Frame.MAXIMIZED_BOTH);
+        this.initComponents();
     }
 
     // initial config
     private void initComponents() {
 
-        desktop = new JDesktopPane();
-        menu = new JMenuBar();
-        menuFile = new JMenu();
-        registrosMenu = new JMenuItem();
-        cadastroMenu = new JMenuItem();
+        this.desktop = new JDesktopPane();
+        this.menu = new JMenuBar();
+        this.menuFile = new JMenu();
+        this.registrosMenu = new JMenuItem();
+        this.cadastroMenu = new JMenuItem();
+        
+        this.setExtendedState(Frame.MAXIMIZED_BOTH);
 
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setBounds(new Rectangle(600, 600, 1280, 600));
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        this.setBounds(new Rectangle(600, 600, 1280, 600));
 
-        GroupLayout desktopLayout = new GroupLayout(desktop);
-        desktop.setLayout(desktopLayout);
-        desktopLayout.setHorizontalGroup(
-                desktopLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGap(0, 880, Short.MAX_VALUE)
-        );
-        desktopLayout.setVerticalGroup(
-                desktopLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGap(0, 555, Short.MAX_VALUE)
-        );
+        
 
-        menuFile.setText("Ações");
+        this.menuFile.setText("Ações");
+        this.cadastroMenu.setText("Cadastrar");
+        this.registrosMenu.setText("Registros");
 
-        registrosMenu.setText("Registros");
-        menuFile.add(registrosMenu);
+        this.menuFile.add(registrosMenu);
+        this.menuFile.add(cadastroMenu);
+        this.menu.add(menuFile);
+        this.setJMenuBar(menu);
 
-        cadastroMenu.setText("Cadastrar");
         
         this.initListeners();
 
-        menuFile.add(cadastroMenu);
 
-        menu.add(menuFile);
 
-        setJMenuBar(menu);
 
         GroupLayout layout = new GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        this.initLayout(layout);
+        GroupLayout desktopLayout = new GroupLayout(desktop);
+        this.getContentPane().setLayout(layout);
+        this.initLayout(layout, desktopLayout);
 
-        pack();
+        this.pack();
     }
 
     private void cadastroMenuActionPerformed(ActionEvent evt) {
@@ -127,7 +120,10 @@ public class Desktop extends JFrame {
                     break;
                 }
             }
-        } catch (Exception e) {
+        } catch (ClassNotFoundException | 
+                IllegalAccessException | 
+                InstantiationException | 
+                UnsupportedLookAndFeelException e) {
             System.out.println("Falha ao setar look and feel");
         }
         
@@ -138,21 +134,13 @@ public class Desktop extends JFrame {
 
     private void initListeners() {
         
-        cadastroMenu.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                cadastroMenuActionPerformed(evt);
-            }
-        });
+        cadastroMenu.addActionListener(this::cadastroMenuActionPerformed);
 
-        registrosMenu.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                registrosMenuActionPerformed(evt);
-            }
-        });
+        registrosMenu.addActionListener(this::registrosMenuActionPerformed);
         
     }
 
-    private void initLayout(GroupLayout layout) {
+    private void initLayout(GroupLayout layout, GroupLayout desktopLayout) {
         layout.setHorizontalGroup(
                 layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addComponent(desktop, GroupLayout.Alignment.TRAILING)
@@ -160,6 +148,15 @@ public class Desktop extends JFrame {
         layout.setVerticalGroup(
                 layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addComponent(desktop)
+        );
+        desktop.setLayout(desktopLayout);
+        desktopLayout.setHorizontalGroup(
+                desktopLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGap(0, 880, Short.MAX_VALUE)
+        );
+        desktopLayout.setVerticalGroup(
+                desktopLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGap(0, 555, Short.MAX_VALUE)
         );
     }
     
