@@ -1,6 +1,6 @@
 package com.ql.view;
 
-import com.ql.factory.ConnectionFactory;
+import com.ql.controller.factory.ConnectionFactory;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;

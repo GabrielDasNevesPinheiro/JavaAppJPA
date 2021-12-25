@@ -1,5 +1,5 @@
 
-package com.ql.factory;
+package com.ql.controller.factory;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;

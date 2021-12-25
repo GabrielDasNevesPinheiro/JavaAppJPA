@@ -1,7 +1,7 @@
 package com.ql.controller;
 
 import com.ql.controller.interfaces.Controller;
-import com.ql.factory.ConnectionFactory;
+import com.ql.controller.factory.ConnectionFactory;
 import com.ql.model.Funcionario;
 import java.util.List;
 import javax.persistence.EntityManager;

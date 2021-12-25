@@ -3,7 +3,7 @@ package com.ql.controller;
 
 import com.ql.model.Setor;
 import com.ql.controller.interfaces.Controller;
-import com.ql.factory.ConnectionFactory;
+import com.ql.controller.factory.ConnectionFactory;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
