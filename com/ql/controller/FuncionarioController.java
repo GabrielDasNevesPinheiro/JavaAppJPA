@@ -30,6 +30,7 @@ public class FuncionarioController implements Controller<Funcionario> {
 
     }
 
+    /*
     public List<Funcionario> listar(String orderby) {
         
         List<Funcionario> lista = null;
@@ -42,7 +43,7 @@ public class FuncionarioController implements Controller<Funcionario> {
             System.out.println("Erro ao listar: " + e.getMessage());
         }
         return lista;
-    }
+    }*/
 
     @Override
     public List<Funcionario> listar() {
@@ -73,6 +74,18 @@ public class FuncionarioController implements Controller<Funcionario> {
         }
 
         return func;
+    }
+    
+    public Funcionario buscar(String nome) {
+        Funcionario retorno = null;
+        List<Funcionario> list = this.listar();
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getNome().equals(nome)) {
+                retorno = list.get(i);
+            }
+        }
+
+        return retorno;
     }
 
     @Override

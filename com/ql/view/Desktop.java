@@ -1,10 +1,15 @@
 package com.ql.view;
 
+import com.ql.controller.FuncionarioController;
 import com.ql.controller.factory.ConnectionFactory;
+import com.ql.model.Funcionario;
 import java.awt.*;
 import java.awt.event.*;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.swing.*;
+import lombok.Getter;
+import lombok.Setter;
 
 public class Desktop extends JFrame {
 
@@ -13,12 +18,18 @@ public class Desktop extends JFrame {
     private JMenuItem registrosMenu;
     private JMenuBar menu;
     private JMenu menuFile;
-    
-    private static final EntityManager manager;
+    private JPanel loginPanel;
+    private JTextField txUser;
+    private JPasswordField txPass;
+
+    @Getter
+    @Setter
+    private Funcionario session = new Funcionario();
+    private final FuncionarioController fc = new FuncionarioController();
 
     //starts before the window appears
     static {
-        manager = new ConnectionFactory().getConnection().createEntityManager();
+        EntityManagerFactory manager = new ConnectionFactory().getConnection();
     }
 
     //construct
@@ -34,7 +45,19 @@ public class Desktop extends JFrame {
         this.menuFile = new JMenu();
         this.registrosMenu = new JMenuItem();
         this.cadastroMenu = new JMenuItem();
+        this.txUser = new JTextField(10);
+        this.txPass = new JPasswordField(8);
 
+        this.loginPanel = new JPanel();
+        this.loginPanel.setLayout(new BoxLayout(this.loginPanel, BoxLayout.Y_AXIS));
+        this.loginPanel.add(new JLabel("Usuário: "));
+        this.loginPanel.add(this.txUser);
+        this.loginPanel.add(new JSeparator());
+        this.loginPanel.add(new JLabel("Senha: "));
+        this.loginPanel.add(this.txPass);
+
+        this.loginRequest();
+        
         this.setExtendedState(Frame.MAXIMIZED_BOTH);
 
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -132,6 +155,41 @@ public class Desktop extends JFrame {
         registrosMenu.addActionListener(this::registrosMenuActionPerformed);
 
     }
+    
+    private void loginRequest () {
+        //login
+        boolean logged = false;
+        
+        while (!logged) {
+            int confirmed = JOptionPane.showConfirmDialog(null, this.loginPanel, "Logar", JOptionPane.OK_CANCEL_OPTION);
+            String nome = this.txUser.getText().trim();
+            String senha = this.txPass.getText().trim();
+
+            if (confirmed == JOptionPane.OK_OPTION) {
+
+                Funcionario login = new Funcionario();
+
+                try {
+
+                    login = this.fc.buscar(this.txUser.getText());
+
+                    if (nome.equals(login.getNome()) && senha.equals(login.getCpf())) {
+                        this.session = login;
+                        logged = true;
+                        JOptionPane.showMessageDialog(null, "Bem vindo(a) "+this.session.getNome());
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Login ou Senha inválidos!");
+                    }
+                } catch (NullPointerException e) {
+                    JOptionPane.showMessageDialog(null, "Login ou Senha inválidos!");
+                }
+
+            } else {
+                System.exit(0);
+            }
+        }
+    }
+    
 
     private void initLayout(GroupLayout layout, GroupLayout desktopLayout) {
         layout.setHorizontalGroup(
