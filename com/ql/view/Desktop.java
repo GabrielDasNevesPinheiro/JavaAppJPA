@@ -3,6 +3,7 @@ package com.ql.view;
 import com.ql.controller.factory.ConnectionFactory;
 import java.awt.*;
 import java.awt.event.*;
+import javax.persistence.EntityManager;
 import javax.swing.*;
 
 public class Desktop extends JFrame {
@@ -12,10 +13,12 @@ public class Desktop extends JFrame {
     private JMenuItem registrosMenu;
     private JMenuBar menu;
     private JMenu menuFile;
+    
+    private static final EntityManager manager;
 
     //starts before the window appears
     static {
-        new ConnectionFactory().getConnection();
+        manager = new ConnectionFactory().getConnection().createEntityManager();
     }
 
     //construct
@@ -113,10 +116,7 @@ public class Desktop extends JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException
-                | IllegalAccessException
-                | InstantiationException
-                | UnsupportedLookAndFeelException e) {
+        } catch (Exception e) {
             System.out.println("Falha ao setar look and feel");
         }
 
