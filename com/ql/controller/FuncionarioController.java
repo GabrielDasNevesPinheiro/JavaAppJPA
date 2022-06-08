@@ -30,21 +30,6 @@ public class FuncionarioController implements Controller<Funcionario> {
 
     }
 
-    /*
-    public List<Funcionario> listar(String orderby) {
-        
-        List<Funcionario> lista = null;
-        try {
-            Query q = this.manager.createQuery("select f from Funcionario f, setor s where f.setor = s.id order by s.id " + orderby);
-            lista = q.getResultList();
-
-            return lista;
-        } catch (Exception e) {
-            System.out.println("Erro ao listar: " + e.getMessage());
-        }
-        return lista;
-    }*/
-
     @Override
     public List<Funcionario> listar() {
 
